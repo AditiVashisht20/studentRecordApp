@@ -9,7 +9,7 @@ var port = 3000
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "1234556",
+    password: "123456",
     database:'student_records'
   });
 
@@ -24,7 +24,7 @@ var con = mysql.createConnection({
     const username= req.body.username;
     const password=req.body.password;
 
-    const sqlquery=`SELECT  password FROM login where username='${username}'`;
+    const sqlquery=`SELECT password FROM login where username='${username}'`;
     //console.log(sqlquery);
     con.query(sqlquery, function (err, result) {
        if (err) 
