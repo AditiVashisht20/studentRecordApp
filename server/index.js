@@ -1,16 +1,21 @@
+const config = require('../config.json')
+
 var express = require('express');
 var mysql = require('mysql2');
 var app = express();
+const cors = require('cors')
 app.use(express.static('public'));
 app.use(express.urlencoded());
 app.use(express.json());
-var port = 3000
+var port = 5000
 
+
+app.use(cors())
 var con = mysql.createConnection({
     host: "localhost",
-    user: "root",
-    password: "123456",
-    database:'student_records'
+    user: config.DB_USERNAME,
+    password: config.DB_PASSWORD,
+    database:config.DB_NAME
   });
 
   con.connect((err)=>{
@@ -34,15 +39,22 @@ var con = mysql.createConnection({
              // console.log(result ,result[0].password);
               if(result[0].password==password)
               {
-                  res.status(200).send("Succesfully Logged in")
+                  res.send({
+                     statusCode:200
+                  })
               }
               else{
-                  res.status(401).send("Not Authorised.")
+                  res.send({
+                     statusCode:401,
+                     data:"Password is wrong"
+                  })
               }
           }
-          else
-          {
-            res.status(404).send("User not created");
+          else{
+            res.send({
+               statusCode:404,
+               data:"No Existing User with specified mail present"
+            });
           }
           
        //console.log(result);
