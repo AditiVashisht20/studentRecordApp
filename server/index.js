@@ -63,6 +63,24 @@ var con = mysql.createConnection({
  });
 
 
+app.get('/list/students',(req,res)=>{
+
+   const sql = `select * from student_data`;
+   con.query(sql,(err,result)=>{
+      res.send(result);
+   })
+});
+
+app.get('/count',(req,res)=>{
+   console.log('req recieved')
+   const sql = `select * from student_data`;
+   con.query(sql, (err, result) => {
+      if(err)
+         throw err
+      console.log(result.length)
+      res.send(JSON.stringify(result.length));
+   })
+})
   
 app.listen(port, function () {   
     console.log(`Student app listening at ${port}`);

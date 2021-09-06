@@ -46,7 +46,7 @@ export default class Login extends React.Component{
             password:this.state.password
         }
 
-        axios.post(`${config.API_URL}\login`,data,{
+        axios.post(`${config.API_URL}/login`,data,{
             'Content-Type':'application\json',
             'Access-Control-Allow-Origin':'*'
         }).then(response=>{

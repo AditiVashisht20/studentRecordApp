@@ -10,6 +10,7 @@ import Login from './components/Login'
 import Header from './components/Header'
 import AddStudent from './components/AddStudent'
 import AddSubject from './components/AddSubject';
+import HomePage from './components/HomePage';
 class App extends React.Component{
 	constructor(props){
 		super(props);
@@ -46,7 +47,7 @@ class App extends React.Component{
 		  		<Router>
 			  		<Header />
 			  		<Switch>
-						<Route exact path="/" />
+						<Route exact path="/" component={HomePage}/>
 						<Route path="/add/student" component={AddStudent} />
 						<Route path="/add/subject" component={AddSubject}/>
 					</Switch>
