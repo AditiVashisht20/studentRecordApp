@@ -62,6 +62,13 @@ var con = mysql.createConnection({
     
  });
 
+ app.get('/list/subjects',(req,res)=>{
+    const sql=`select *from subject_details`;
+    con.query(sql,(err,result)=>
+    {
+       res.send(result);
+    })
+ })
 
 app.get('/list/students',(req,res)=>{
 
@@ -81,7 +88,74 @@ app.get('/count',(req,res)=>{
       res.send(JSON.stringify(result.length));
    })
 })
-  
+app.post('/add/subject', (req,res)=>
+{
+   console.log('req received')
+   const sql=`insert into subject_details(subcode, subname) values('${req.body.subcode}', '${req.body.subname}')`
+   con.query(sql,(err,result)=>
+   {
+      if(err)
+      {
+         console.log(err);
+         res.send('Please enter correct details');
+      }
+      else
+      {
+         res.send('Successfully added');
+      }
+   })
+})
+
+app.post('/add/student',(req,res)=>
+{
+   console.log(req.body)
+   const sql=`insert into student_data(fname,midname,lname,age,dob,email,address)values('${req.body.fname}','${req.body.mname}','${req.body.lname}', ${parseInt(req.body.age)},STR_TO_DATE('${req.body.dob}','%d-%m-%Y'), '${req.body.email}','${req.body.address}')`
+   con.query(sql,(err,result)=>{
+      if(err)
+      {
+         console.log(err);
+         res.send('Please retry');
+
+      }
+      else
+      {
+         res.send('Sucessfully Added');
+
+      }
+
+   });
+})
+app.get('/list/student/:id',(req,res)=>
+   {
+      const sql=`select * from student_data where rollNumber=${req.params.id}`
+      con.query(sql,(err,result)=>
+      {
+         if(err)
+         {
+            console.log(err);
+            res.send('Try again after some time');
+         }
+         else
+         {
+            console.log(result[0]);
+            res.send(result[0])
+         }
+      });
+   })
+app.post(`/edit/student/:id`,(req,res)=>{
+   const sql=`UPDATE student_data set fname='${req.body.fname}',midname='${req.body.midname}',lname='${req.body.lname}',age=${req.body.age},dob=STR_TO_DATE('${req.body.dob}','%d-%m-%Y'), email='${req.body.email}', address='${req.body.address}' where rollNumber=${req.params.id}`
+   con.query(sql,(err,result)=>{
+      if(err){
+      console.log(err);
+      res.send('Please try again later')
+}
+else
+{
+   res.send('updated')
+}
+})
+})
+
 app.listen(port, function () {   
     console.log(`Student app listening at ${port}`);
  })

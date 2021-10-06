@@ -1,91 +1,133 @@
 import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom'
-import { Container, ListGroup } from 'react-bootstrap'
+import { Container, ListGroup,OverlayTrigger,Table,Tooltip } from 'react-bootstrap'
+import config from '../config.json'
 
 
-class CategoryList extends React.Component {
+class List extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            categories: null,
-            products: null
+        this.state={
+          data:[]
         }
-        this.deleteItem = this.deleteItem.bind(this);
-    }
-
-    componentDidMount() {
-        if (this.props.option === 'category') {
-            axios.get(`http://localhost:5000/students`)
-                .then(res => {
-                    const cat = res.data;
-                    this.setState({ categories: cat })
-                })
-        } else {
-            axios.get(`http://localhost:5000/subjects`)
-                .then(res => {
-                    const products = res.data;
-                    this.setState({ products: products })
-                })
+        
         }
-    }
-
-    deleteItem(event) {
-        event.preventDefault()
-        console.log('props = ', this.props)
-        if (this.props.option === 'category') {
-            let c = window.confirm(`Are you sure you want to delete the category ${event.target.getAttribute('value')}`)
-            if (c) {
-                axios.post(`http://localhost:5000/delete/category/${event.target.id}`, {})
-                    .then(res => {
-                        const data = res.data;
-                        console.log(data)
-                        alert(data);
-                        window.location.reload()
-                    })
-            }
-        } else if (this.props.option === 'product') {
-            let c = window.confirm(`Are you sure you want to delete the product ${event.target.getAttribute('value')}`)
-            if (c) {
-                axios.post(`http://localhost:5000/delete/product/${event.target.id}`, {})
-                    .then(res => {
-                        const data = res.data;
-                        console.log(data)
-                        alert(data);
-                        window.location.reload()
-                    })
-            }
+        componentDidMount()
+        {
+          axios.get(`${config.API_URL}/list/${this.props.option}`)
+          .then(res=>
+            {
+              const data=res.data;
+              console.log('listdata,',data);
+              this.setState({data:data})
+            })
         }
-    }
-
-    render() {
-        if (this.props.option === 'category') {
-            if (this.state.categories) {
-                return (
-                    <Container>
-                        <ListGroup variant='flush'>
-                            {this.state.categories.map(category => <ListGroup.Item key={category.id} action href={`/category/${category.id}`}> {category.data.name} ({category.data.products} products)<span className="float-right"><Link style={{ textDecoration: 'none' }} to={`/edit/category/${category.id}`}><i className="fas fa-edit"></i></Link>  <span id={category.id} value={category.data.name} onClick={this.deleteItem} className="fas fa-trash-alt"></span></span></ListGroup.Item>)}
-                        </ListGroup>
-                    </Container>
-                )
-            } else {
-                return <h1>Loading</h1>
-            }
-        } else {
-            if (this.state.products) {
-                return (
-                    <Container>
-                        <ListGroup variant='flush'>
-                            {this.state.products.map(product => <ListGroup.Item key={product.id} action href={`/product/${product.id}`}> {product.data.name} <span className="float-right"><Link style={{ textDecoration: 'none' }} to={`/edit/product/${product.id}`}><i className="fas fa-edit"></i></Link>  <span id={product.id} value={product.data.name} onClick={this.deleteItem} className="fas fa-trash-alt"></span></span></ListGroup.Item>)}
-                        </ListGroup>
-                    </Container>
-                )
-            } else {
-                return <h1>Loading</h1>
-            }
+        renderTooltio(props)
+        {
+          <Tooltip id="button-tooltip"{...props}>
+            Simple tooltip
+          </Tooltip>
         }
-    }
-}
+     render() {
+       
+      if(this.props.option=='students'){
+                return (<Table striped bordered hover variant="dark">
+  <thead>
+    <tr>
+      <th>Roll Number</th>
+      <th>First Name</th>
+      <th>Mid Name</th>
+      <th>Last Name</th>
+      <th>DOB</th>
+      <th>age</th>
+      <th>Email</th>
+      <th>Address</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {this.state.data.map(student=>{
+      return (
+        <tr>
+          <td>{student.rollNumber}</td>
+          <td>{student.fname}</td>
+          <td>{student.midname}</td>
+          <td>{student.lname}</td>
+          <td>{new Date(student.dob).toLocaleDateString()} </td>
+          <td>{student.age}</td>
+          <td>{student.email}</td>
+          <td>{student.address}</td>
+          <td style={{columneWidth:'160px', padding:'10px'}}>
+            {[{
+              className:'fas fa-edit',
+              text:'Edit Student',
+              link:`/edit/student/${student.rollNumber}`
+            },
+            {
+              className:'fas fa-pen',
+              text:'Update Attendance',
+              link:`/edit/attendance/${student.rollNumber}`
 
-export default CategoryList;
+            },
+            {
+              className:'far fa-trash-alt',
+              text:'Delete Student',
+              link:`/delete/student/${student.rollNumber}`
+            }]
+          .map(ele=>{
+            return(<OverlayTrigger
+          placement="top"
+              delay={{show:250,hide:400}}
+              overlay={
+                <Tooltip>
+                  {ele.text}
+                  </Tooltip>
+              }
+              >
+                 <Link style={{ textDecoration: 'none',color:'#000' }} to={ele.link}>
+                 <i className={ele.className}>&nbsp;&nbsp;</i>
+                     </Link>
+                      </OverlayTrigger>)
+          })}
+          </td>
+           </tr>
+          
+      )
+    })}
+   
+  </tbody>
+  
+</Table>
+ )}
+    
+    else
+    {
+      return(<Table striped bordered hover variant="dark">
+  <thead>
+    <tr>
+      <th>Subject Name</th>
+      <th>Subject Code</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      this.state.data.map(subjects=>{
+        return(
+          <tr>
+            <td>{subjects.subname}</td>  
+            <td>{subjects.subcode}</td>        
+            </tr>
+        )
+      })
+    }
+  </tbody>
+  </Table>
+       ) }
+  }
+  
+     }
+export default List;
+  

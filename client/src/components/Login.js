@@ -3,6 +3,9 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
 import config from '../config.json'
+import {
+    Row,Col
+} from 'react-bootstrap'
 
 import "./Login.css";
 
@@ -65,30 +68,36 @@ export default class Login extends React.Component{
     }
     render(){
         return (
-            <div className="Login">
+            <div className="Login" className="bg-info">
                 <Form onSubmit={this.handleSubmit}>
-                    <Form.Group size="lg" controlId="email">
+
+                   <Row className="sm-3">
+                       <Form.Group as={Col} controlId="email">
                         <Form.Label>Username</Form.Label>
                         <Form.Control
                             autoFocus
+                            placeholder="Enter Your username"
                             type="text"
                             value={this.state.email}
                             onChange={(e) => this.setEmail(e.target.value)}
                         />
-                    </Form.Group>
-                    <Form.Group size="lg" controlId="password">
+                    </Form.Group></Row>
+                    <Row className="sm-3">
+                    <Form.Group as={Col} controlId="password">
                         <Form.Label>Password</Form.Label>
                         <Form.Control
                             type="password"
+                            placeholder="Enter Your Password"
                             value={this.state.password}
                             onChange={(e) => this.setPassword(e.target.value)}
                         />
-                    </Form.Group>
+                         </Form.Group></Row>
                     <Button block size="lg" type="submit" disabled={!this.validateForm()}>
                             Login
                     </Button>
                 </Form>
             </div>
+            
         );
     }
 }
