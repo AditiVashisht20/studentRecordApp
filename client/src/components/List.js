@@ -118,7 +118,35 @@ class List extends React.Component {
         return(
           <tr>
             <td>{subjects.subname}</td>  
-            <td>{subjects.subcode}</td>        
+            <td>{subjects.subcode}</td> 
+            <td style={{columneWidth:'160px', padding:'10px'}}>   
+            {[{
+              className:'fas fa-edit',
+              text:'Edit Subject',
+              link:`/edit/subject/${subjects.subcode}`
+            },
+            {
+              className:'far fa-trash-alt',
+              text:'Delete SUbject',
+              link:`/delete/subject/${subjects.subcode}`
+            }]
+            .map(ele=>{
+              return(<OverlayTrigger
+            placement="top"
+                delay={{show:250,hide:400}}
+                overlay={
+                  <Tooltip>
+                    {ele.text}
+                    </Tooltip>
+                }
+                >
+                   <Link style={{ textDecoration: 'none',color:'#000' }} to={ele.link}>
+                   <i className={ele.className}>&nbsp;&nbsp;</i>
+                       </Link>
+                        </OverlayTrigger>)
+            })}
+            </td>
+
             </tr>
         )
       })

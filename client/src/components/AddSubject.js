@@ -9,6 +9,11 @@ class AddSubject extends React.Component {
 
     constructor(props) {
         super(props);
+        let data;
+        if(this.props.op=='edit')
+        {
+            data=this.getData(this.props.match.params.id);
+        }
         this.state={
             subcode:null,
             subname:null,
@@ -17,7 +22,21 @@ class AddSubject extends React.Component {
         }
         this.setcode=this.setcode.bind(this)
         this.setsubname=this.setsubname.bind(this)
+        this.getData=this.getData.bind(this)
         this.handleSubmit=this.handleSubmit.bind(this)
+    }
+    getData(id)
+    {
+        axios.get(`${config.API_URL}/list/subject/${id}`).then(response=>{
+            console.log(response.data);
+            this.setState({
+                subname:response.data.subname||'',
+                subcode: response.data.subcode ||'',
+                
+
+            })
+        })
+
     }
     setcode(subcode)
     {

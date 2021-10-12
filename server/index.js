@@ -155,7 +155,72 @@ else
 }
 })
 })
+app.get('/list/subject/:id',(req,res)=>
+{
+   const sql=`select * from subject_details where subcode=${req.params.id}`
+   con.query(sql,(err,result)=>
+   {
+      if(err)
+      {
+         console.log(err);
+         res.send('Try again after some time');
+      }
+      else
+      {
+         console.log(result[0]);
+         res.send(result[0])
+      }
+   });
+})
+app.post(`/edit/subject/:id`,(req,res)=>
+{
+   const sql=`Update subject_details set subname='${req.body.subname}' where subcode=${req.params.id}`
+   con.query(sql,(err,result)=>
+   {
+      if(err)
+      {
+      console.log(err);
+      res.send('Try Again')
+      }
+      else
+      {
+         res.send('Updated')
+      }
+   })
+})
+app.post(`/delete/subject/:id`,(req,res)=>
+{
+   const sql=`Delete from subject_details where subcode=${req.params.id}`;
+   con.query(sql,(err,result)=>
+   {
+      if(err){
+      console.log(err);
+      res.send('Please Try again after sometime')
+      }
+      else{
+         res.send('Deleted')
+      }
 
+   })
+});
+
+app.post(`/delete/student/:id`,(req,res)=>
+{
+   const sql=`Delete from student_data where rollNumber=${req.params.id}`;
+   con.query(sql,(err,result)=>
+   {
+      if(err)
+      {
+         console.log(err);
+         res.send('Please try again')
+
+      }
+      else
+      {
+         res.send('Deleted')
+      }
+   })
+});
 app.listen(port, function () {   
     console.log(`Student app listening at ${port}`);
  })
