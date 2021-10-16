@@ -80,7 +80,7 @@ class AddStudent extends React.Component {
                         return{
                             value:data.subcode,
                         label:`${data.subname}` 
-                                           }                       }
+                                           }                       
                     })
                     console.log(options);
                     this.setState({
