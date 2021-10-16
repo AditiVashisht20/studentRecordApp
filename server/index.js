@@ -109,7 +109,7 @@ app.post('/add/subject', (req,res)=>
 app.post('/add/student',(req,res)=>
 {
    console.log(req.body)
-   const sql=`insert into student_data(fname,midname,lname,age,dob,email,address)values('${req.body.fname}','${req.body.mname}','${req.body.lname}', ${parseInt(req.body.age)},STR_TO_DATE('${req.body.dob}','%d-%m-%Y'), '${req.body.email}','${req.body.address}')`
+   const sql=`insert into student_data(fname,midname,lname,age,dob,email,address,subjects)values('${req.body.fname}','${req.body.mname}','${req.body.lname}', ${parseInt(req.body.age)},STR_TO_DATE('${req.body.dob}','%d-%m-%Y'), '${req.body.email}','${req.body.address}','${req.body.subjects}')`
    con.query(sql,(err,result)=>{
       if(err)
       {
@@ -143,7 +143,7 @@ app.get('/list/student/:id',(req,res)=>
       });
    })
 app.post(`/edit/student/:id`,(req,res)=>{
-   const sql=`UPDATE student_data set fname='${req.body.fname}',midname='${req.body.midname}',lname='${req.body.lname}',age=${req.body.age},dob=STR_TO_DATE('${req.body.dob}','%d-%m-%Y'), email='${req.body.email}', address='${req.body.address}' where rollNumber=${req.params.id}`
+   const sql=`UPDATE student_data set fname='${req.body.fname}',midname='${req.body.midname}',lname='${req.body.lname}',age=${req.body.age},dob=STR_TO_DATE('${req.body.dob}','%d-%m-%Y'), email='${req.body.email}', address='${req.body.address}', subjects='${req.body.subjects}' where rollNumber=${req.params.id}`
    con.query(sql,(err,result)=>{
       if(err){
       console.log(err);

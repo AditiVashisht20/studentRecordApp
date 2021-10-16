@@ -4,6 +4,8 @@ Form, Row,Col,Button, Container
 } from 'react-bootstrap'
 import axios from 'axios'
 import config from '../config.json'
+import Select from 'react-select';
+
 
 
 class AddStudent extends React.Component {
@@ -23,8 +25,18 @@ class AddStudent extends React.Component {
             age:0,
             email:null,
             address:null,
-            
-        }
+            label:'Add',
+            options:[
+                
+                    {value:'chocolate', label:'chocolate'},
+                    {value:'Strawbeery', label:'Strawberry'},
+                    {
+                        value: 'vanilla', label:'vanilla'},
+                    
+                
+            ],
+            selectedOption:[]
+         }
         this.setFirstName=this.setFirstName.bind(this)
         this.setMidName=this.setMidName.bind(this)
         this.setLname=this.setLname.bind(this)
@@ -35,6 +47,7 @@ class AddStudent extends React.Component {
         this.getAge=this.getAge.bind(this)
         this.convertDate=this.convertDate.bind(this)
         this.handleSubmit=this.handleSubmit.bind(this)
+        this.handleChange=this.handleChange.bind(this)
 
     }
 
@@ -49,12 +62,34 @@ class AddStudent extends React.Component {
                 dob: this.convertDate(response.data.dob) ||'',
                 email: response.data.email ||'',
                 address: response.data.address ||'',
-                age: response.data.age ||''
+                age: response.data.age ||'',
+                label: 'Update',
+                selectedOption:response.data.subjects || []
 
             })
         })
 
     }
+    componentDidMount()
+    {
+        axios.get(`${config.API_URL}/list/subjects`).then(response=>
+            {
+                console.log(response.data);
+                var options=response.data.map(data=>
+                    {
+                        return{
+                            value:data.subcode,
+                        label:`${data.subname}` 
+                                           }                       }
+                    })
+                    console.log(options);
+                    this.setState({
+                        options:options
+                    })
+            })
+        }
+    
+    
     setFirstName(fname)
     {
         this.setState({
@@ -127,7 +162,8 @@ convertDate(inputFormat)
             dob:this.state.dob,
             age:this.state.age+'',
             email:this.state.email,
-            address:this.state.address
+            address:this.state.address,
+            subjects:JSON.stringify(this.state.selectedOption),
         }
         axios.post(`${config.API_URL}/add/student`, data, {
             'Content-Type': 'application\json',
@@ -138,7 +174,16 @@ convertDate(inputFormat)
             window.location.reload()
         })
     }
+    handleChange(selectedOption)
+    {
+        console.log(selectedOption)
+        this.setState({
+            selectedOption: selectedOption
+        })
+    }
     render() {
+        const selectedOption=this.state;
+
         
         return (<Container className="bg-info"><Form onSubmit={this.handleSubmit}>
   <Row className="mb-3">
@@ -195,6 +240,15 @@ convertDate(inputFormat)
       onChange={(e) => this.setadd(e.target.value)}
       value={this.state.address}/>
     </Form.Group>
+    <Form.Group as={Col} controlId="subject">
+        <Form.Label>Subject</Form.Label>
+        <Select
+        value={this.state.selectedOption}
+        isMulti={true}
+        onChange={this.handleChange}
+        options={this.state.options}
+        />
+</Form.Group>
   </Row>
  <Button variant="danger" type="submit">
     Add Student
@@ -204,5 +258,6 @@ convertDate(inputFormat)
 
     }
 }
+
 
 export default AddStudent;

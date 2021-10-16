@@ -44,6 +44,7 @@ class List extends React.Component {
       <th>age</th>
       <th>Email</th>
       <th>Address</th>
+      <th>Subjects Allocated</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -59,6 +60,15 @@ class List extends React.Component {
           <td>{student.age}</td>
           <td>{student.email}</td>
           <td>{student.address}</td>
+        <td>
+          {
+            (student.subjects==null)?'No Subjects Allocated':
+            student.subjects.map(ele=>
+              {
+                return(<li key={ele.value}>{ele.label}</li>)
+              })
+          }
+          </td>
           <td style={{columneWidth:'160px', padding:'10px'}}>
             {[{
               className:'fas fa-edit',
