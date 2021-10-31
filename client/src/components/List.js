@@ -76,16 +76,24 @@ class List extends React.Component {
               link:`/edit/student/${student.rollNumber}`
             },
             {
-              className:'fas fa-pen',
-              text:'Update Attendance',
-              link:`/edit/attendance/${student.rollNumber}`
+              className:'fas fa-money-bill-wave-alt',
+              text:'Add Dues',
+              link:`/edit/dues/${student.rollNumber}`
 
             },
             {
               className:'far fa-trash-alt',
               text:'Delete Student',
               link:`/delete/student/${student.rollNumber}`
-            }]
+            },
+            {
+              className: 'fas fa-book-open',
+              text: 'upload marks',
+              link:`/books${student.books}`
+
+            },
+           
+          ]
           .map(ele=>{
             return(<OverlayTrigger
           placement="top"

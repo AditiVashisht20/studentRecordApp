@@ -13,6 +13,8 @@ import AddSubject from './components/AddSubject';
 import HomePage from './components/HomePage';
 import axios from 'axios';
 import config from './config.json'
+import EditDues from './components/EditDues';
+import AddDues from './components/AddDues';
 class App extends React.Component{
 	constructor(props){
 		super(props);
@@ -86,6 +88,8 @@ class App extends React.Component{
 									})
 							}
 						}}/>
+					<Route path="/edit/dues/:id"  render={(props)=> <EditDues {...props}/>}/>
+					<Route path="/add/dues/:id"  render={(props)=> <AddDues {...props}/>}/>
 					</Switch>
 
 				</Router>
