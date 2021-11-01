@@ -2,7 +2,8 @@ import React from "react";
 import {
     Form, Row,Col,Button, Container     
     } from 'react-bootstrap'
-    
+    import axios from 'axios'
+    import config from '../config.json'
 class AddDues extends React.Component{
     constructor(props){
         super(props);
@@ -30,6 +31,19 @@ class AddDues extends React.Component{
 
     handleSubmit(){
         //TODO: Handle submit to be completed
+                const data = {
+                    id:this.state.id,
+            amount:parseInt(this.state.amount),
+            reason:this.state.reason,
+        }
+        axios.post(`${config.API_URL}/add/dues`, data, {
+            'Content-Type': 'application\json',
+            'Access-Control-Allow-Origin': '*'
+        }).then(response => {
+            console.log(response);
+            alert(response.data)
+            window.location.reload()
+        })
     }
 
 
@@ -62,7 +76,7 @@ class AddDues extends React.Component{
                         </Form.Group>
                     </Row>
                     <Button variant="danger" type="submit">
-                         Add Subject
+                         Add Due
                     </Button>
                 </Form>
             </Container>

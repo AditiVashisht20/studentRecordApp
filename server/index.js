@@ -125,6 +125,22 @@ app.post('/add/student',(req,res)=>
 
    });
 })
+app.post('/add/dues',(req,res)=>
+{
+   console.log(req.body)
+   const sql=`insert into dues(stud_id,due_desc,due_payment) values(${req.body.id}, '${req.body.reason}',${req.body.amount})`
+   con.query(sql,(err,result)=>
+   {
+      if(err)
+      {
+         console.log(err)
+         res.send("TRy again");
+      }
+      else{
+         res.send('Due Added');
+      }
+   });
+})
 app.get('/list/student/:id',(req,res)=>
    {
       const sql=`select * from student_data where rollNumber=${req.params.id}`
@@ -137,7 +153,7 @@ app.get('/list/student/:id',(req,res)=>
          }
          else
          {
-            console.log(result[0]);
+            console.log(result[0])
             res.send(result[0])
          }
       });
