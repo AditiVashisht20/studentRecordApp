@@ -7,7 +7,10 @@ const cors = require('cors')
 app.use(express.static('public'));
 app.use(express.urlencoded());
 app.use(express.json());
+var shortid=require('shortid')
+const e = require('express');
 var port = 5000
+
 
 
 app.use(cors())
@@ -25,18 +28,17 @@ var con = mysql.createConnection({
  })
 
  app.post('/login',(req,res)=>{
-    console.log(req.body);
-    const username= req.body.username;
+const username= req.body.username;
     const password=req.body.password;
 
     const sqlquery=`SELECT password FROM login where username='${username}'`;
-    //console.log(sqlquery);
+   
     con.query(sqlquery, function (err, result) {
        if (err) 
           throw err;
           if(result.length)
           {
-             // console.log(result ,result[0].password);
+            
               if(result[0].password==password)
               {
                   res.send({
@@ -56,8 +58,7 @@ var con = mysql.createConnection({
                data:"No Existing User with specified mail present"
             });
           }
-          
-       //console.log(result);
+
      });
     
  });
@@ -108,7 +109,7 @@ app.post('/add/subject', (req,res)=>
 
 app.post('/add/student',(req,res)=>
 {
-   console.log(req.body)
+  
    const sql=`insert into student_data(fname,midname,lname,age,dob,email,address,subjects)values('${req.body.fname}','${req.body.mname}','${req.body.lname}', ${parseInt(req.body.age)},STR_TO_DATE('${req.body.dob}','%d-%m-%Y'), '${req.body.email}','${req.body.address}','${req.body.subjects}')`
    con.query(sql,(err,result)=>{
       if(err)
@@ -125,44 +126,29 @@ app.post('/add/student',(req,res)=>
 
    });
 })
-app.post('/add/dues',(req,res)=>
-{
-   console.log(req.body)
-   const sql=`insert into dues(stud_id,due_desc,due_payment) values(${req.body.id}, '${req.body.reason}',${req.body.amount})`
-   con.query(sql,(err,result)=>
-   {
-      if(err)
-      {
-         console.log(err)
-         res.send("TRy again");
-      }
-      else{
-         res.send('Due Added');
-      }
-   });
-})
-app.get('/list/student/:id',(req,res)=>
-   {
-      const sql=`select * from student_data where rollNumber=${req.params.id}`
-      con.query(sql,(err,result)=>
-      {
-         if(err)
-         {
-            console.log(err);
-            res.send('Try again after some time');
-         }
-         else
-         {
-            console.log(result[0])
-            res.send(result[0])
-         }
-      });
-   })
+
+// app.get('/list/student/:id',(req,res)=>
+//    {
+//       const sql=`select * from student_data where rollNumber=${req.params.id}`
+//       con.query(sql,(err,result)=>
+//       {
+//          if(err)
+//          {
+            
+//             res.send('Try again after some time');
+//          }
+//          else
+//          {
+           
+//             res.send(result[0])
+//          }
+//       });
+//    })
 app.post(`/edit/student/:id`,(req,res)=>{
    const sql=`UPDATE student_data set fname='${req.body.fname}',midname='${req.body.midname}',lname='${req.body.lname}',age=${req.body.age},dob=STR_TO_DATE('${req.body.dob}','%d-%m-%Y'), email='${req.body.email}', address='${req.body.address}', subjects='${req.body.subjects}' where rollNumber=${req.params.id}`
    con.query(sql,(err,result)=>{
       if(err){
-      console.log(err);
+    
       res.send('Please try again later')
 }
 else
@@ -178,7 +164,6 @@ app.get('/list/subject/:id',(req,res)=>
    {
       if(err)
       {
-         console.log(err);
          res.send('Try again after some time');
       }
       else
@@ -195,7 +180,7 @@ app.post(`/edit/subject/:id`,(req,res)=>
    {
       if(err)
       {
-      console.log(err);
+
       res.send('Try Again')
       }
       else
@@ -210,7 +195,7 @@ app.post(`/delete/subject/:id`,(req,res)=>
    con.query(sql,(err,result)=>
    {
       if(err){
-      console.log(err);
+
       res.send('Please Try again after sometime')
       }
       else{
@@ -227,7 +212,7 @@ app.post(`/delete/student/:id`,(req,res)=>
    {
       if(err)
       {
-         console.log(err);
+      
          res.send('Please try again')
 
       }
@@ -237,6 +222,108 @@ app.post(`/delete/student/:id`,(req,res)=>
       }
    })
 });
+
+app.post('/add/dues',(req,res)=>
+{
+   let id=shortid.generate();
+   const sql=`insert into dues(due_id,due_desc,due_payment,is_completed) values('$(id}', ${req.body.id}, '${req.body.reason}',${req.body.amount},false)`
+   con.query(sql,(err,result)=>
+   {
+      if(err)
+      if(err.no==1062)
+      {
+         res.send('Duplicate Dues exists for this students');
+      }
+      else{
+         res.send('Please try again after sometime')
+      }
+      else
+      {
+         res.send('Successfully Added');
+      }
+   })
+})
+
+app.get('/list/dues/:id', (req,res)=>
+{
+   const sql='select * from dues where stud_id=${req.params.id}'
+   con.query(sql,(err,result)=>
+   {
+      if(err)
+      {
+      
+         res.send('Please Try Again after some time')
+
+      }
+      else{
+         res.send(result[0])
+      }
+   })
+})
+app.post('/complete/due/:id', (req,res)=>
+{
+   const sql=`UPDATE dues SET is_completed=${true} where due_id='${req.params.id}'`;
+   con.query(sql,(err,result)=>
+   {
+      if(err){
+      throw err;
+      res.send('Please Try Again later')
+      }
+      else
+      res.send('Due Completed')
+   })
+})
+app.post('/incomplete/due/:id', (req,res)=>
+{
+   const sql=`UPDATE dues SET is_completed =${false} where due_id='{req.params.id}'`;
+   con.query(sql,(err,result)=>
+   {
+      if(err)
+      {
+         throw err;
+         res.send('Please Try again in sometime');
+      }
+      else{
+         res.send('Updated');
+      }
+   })
+})
+
+app.post('/delete/due/:id', (req,res)=>
+{
+   const sql=`DELETE from dues where due_id='${req.params.id}'`;
+   con.query(sql,(err,result)=>
+   {
+      if(err)
+      {
+         res.send('Try in sometime');
+
+      }
+      else
+      {
+         res.send('Deleted')
+      }
+   });
+})
+app.post('/update/dues/:id', (req,res)=>
+{
+   console.log(req.body);
+   const sql=`UPDATE dues SET due_payment=${req.body.amount}, due_desc='${req.body.reason}' where due_id='${req.params.id}'`;
+   con.query(sql,(err,result)=>
+{
+   if(err)
+   {
+      res.send('Please try again later');
+
+   }
+   else
+   {
+      res.send('Due updated')
+   }
+})
+})
+
+
 app.listen(port, function () {   
     console.log(`Student app listening at ${port}`);
  })

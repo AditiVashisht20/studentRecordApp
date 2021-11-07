@@ -90,6 +90,51 @@ class App extends React.Component{
 						}}/>
 					<Route path="/edit/dues/:id"  render={(props)=> <EditDues {...props}/>}/>
 					<Route path="/add/dues/:id"  render={(props)=> <AddDues {...props}/>}/>
+					<Route path="/complete/due/:id" render={(props)=>
+					{
+						if(window.confirm(`Are you sure you want to mark the due as completed?`))
+						{
+							axios.post(`$(config.API_URL}/complete/due/${props.match.params.id}`,{},{
+								'Content-Type': 'application\json',
+								'Access-Control-Allow-Origin': '*'
+							}).then(response=>
+								{
+									window.history.back();
+								})
+							
+						
+					}
+				}}/>
+				<Route path="/incomplete/due/:id" render={(props)=>
+				{
+					if(window.confirm(`Are you sure you want to mark the due as incomplete?`))
+					{
+						axios.post(`${config.API_URL}/incomplete/due/${props.match.params.id}`,{},{
+							'Content-Type': 'application\json',
+							'Access-Control-Allow-Origin': '*'
+
+						}).then(response=>
+						{
+							window.history.back();
+						})
+				}
+				}}/>
+
+				<Route path="/delete/due/:id" render={(props)=>{
+					if(window.confirm(`Are you sure you want to delete the due?`))
+					{
+						axios.post(`${config.API_URL}/delete/due/${props.match.params.id}`,{},{
+							'Content-Type': 'application\json',
+							'Access-Control-Allow-Origin': '*'
+						}).then(response=>
+							{
+								window.history.back();
+							})
+					}
+				}}/>
+				<Route path="/edit/due/:id" render={(props)=><AddDues op='edit'{...props}/>}/>
+
+						
 					</Switch>
 
 				</Router>
