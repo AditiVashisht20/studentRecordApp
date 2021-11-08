@@ -94,7 +94,7 @@ class App extends React.Component{
 					{
 						if(window.confirm(`Are you sure you want to mark the due as completed?`))
 						{
-							axios.post(`$(config.API_URL}/complete/due/${props.match.params.id}`,{},{
+							axios.post(`${config.API_URL}/complete/due/${props.match.params.id}`,{},{
 								'Content-Type': 'application\json',
 								'Access-Control-Allow-Origin': '*'
 							}).then(response=>

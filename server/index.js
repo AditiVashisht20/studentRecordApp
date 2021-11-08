@@ -127,23 +127,23 @@ app.post('/add/student',(req,res)=>
    });
 })
 
-// app.get('/list/student/:id',(req,res)=>
-//    {
-//       const sql=`select * from student_data where rollNumber=${req.params.id}`
-//       con.query(sql,(err,result)=>
-//       {
-//          if(err)
-//          {
+app.get('/list/student/:id',(req,res)=>
+   {
+      const sql=`select * from student_data where rollNumber=${req.params.id}`
+      con.query(sql,(err,result)=>
+      {
+         if(err)
+         {
             
-//             res.send('Try again after some time');
-//          }
-//          else
-//          {
+            res.send('Try again after some time');
+         }
+         else
+         {
            
-//             res.send(result[0])
-//          }
-//       });
-//    })
+            res.send(result[0])
+         }
+      });
+   })
 app.post(`/edit/student/:id`,(req,res)=>{
    const sql=`UPDATE student_data set fname='${req.body.fname}',midname='${req.body.midname}',lname='${req.body.lname}',age=${req.body.age},dob=STR_TO_DATE('${req.body.dob}','%d-%m-%Y'), email='${req.body.email}', address='${req.body.address}', subjects='${req.body.subjects}' where rollNumber=${req.params.id}`
    con.query(sql,(err,result)=>{
@@ -226,10 +226,10 @@ app.post(`/delete/student/:id`,(req,res)=>
 app.post('/add/dues',(req,res)=>
 {
    let id=shortid.generate();
-   const sql=`insert into dues(due_id,due_desc,due_payment,is_completed) values('$(id}', ${req.body.id}, '${req.body.reason}',${req.body.amount},false)`
+   const sql=`insert into dues(due_id,stud_id,due_desc,due_payment,is_completed) values('${id}', ${req.body.id}, '${req.body.reason}',${req.body.amount},false)`
    con.query(sql,(err,result)=>
    {
-      if(err)
+      if(err){
       if(err.no==1062)
       {
          res.send('Duplicate Dues exists for this students');
@@ -237,6 +237,7 @@ app.post('/add/dues',(req,res)=>
       else{
          res.send('Please try again after sometime')
       }
+   }
       else
       {
          res.send('Successfully Added');
@@ -246,7 +247,7 @@ app.post('/add/dues',(req,res)=>
 
 app.get('/list/dues/:id', (req,res)=>
 {
-   const sql='select * from dues where stud_id=${req.params.id}'
+   const sql=`select * from dues where stud_id=${req.params.id}`
    con.query(sql,(err,result)=>
    {
       if(err)
@@ -256,7 +257,7 @@ app.get('/list/dues/:id', (req,res)=>
 
       }
       else{
-         res.send(result[0])
+         res.send(result)
       }
    })
 })
@@ -275,7 +276,7 @@ app.post('/complete/due/:id', (req,res)=>
 })
 app.post('/incomplete/due/:id', (req,res)=>
 {
-   const sql=`UPDATE dues SET is_completed =${false} where due_id='{req.params.id}'`;
+   const sql=`UPDATE dues SET is_completed =${false} where due_id='${req.params.id}'`;
    con.query(sql,(err,result)=>
    {
       if(err)
@@ -305,6 +306,17 @@ app.post('/delete/due/:id', (req,res)=>
       }
    });
 })
+app.get('/list/due/:id', (req, res) => {
+   const sql = `select * from dues where due_id = '${req.params.id}'`
+   con.query(sql, (err, result) => {
+      if (err) {
+         throw err;
+         res.send('Try Again after some time')
+      } else {
+         res.send(result[0])
+      }
+   });
+});
 app.post('/update/dues/:id', (req,res)=>
 {
    console.log(req.body);
