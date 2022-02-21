@@ -245,6 +245,7 @@ app.post('/add/dues',(req,res)=>
    })
 })
 
+
 app.get('/list/dues/:id', (req,res)=>
 {
    const sql=`select * from dues where stud_id=${req.params.id}`
@@ -334,6 +335,29 @@ app.post('/update/dues/:id', (req,res)=>
    }
 })
 })
+
+app.post('/add/marks',(req,res)=>
+{
+   //let id=shortid.generate();
+   const sql=`insert into marks()`
+   con.query(sql,(err,result)=>
+   {
+      if(err){
+      if(err.no==1062)
+      {
+         res.send('Duplicate Marks exists for this students');
+      }
+      else{
+         res.send('Marks:Please try again after sometime')
+      }
+   }
+      else
+      {
+         res.send('Marks Added Sucessfully');
+      }
+   })
+})
+app.get
 
 
 app.listen(port, function () {   

@@ -89,7 +89,7 @@ class List extends React.Component {
             {
               className: 'fas fa-book-open',
               text: 'upload marks',
-              link:`/books${student.books}`
+              link:`/marks/${student.rollNumber}`
 
             },
            

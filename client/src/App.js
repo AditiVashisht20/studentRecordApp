@@ -15,6 +15,7 @@ import axios from 'axios';
 import config from './config.json'
 import EditDues from './components/EditDues';
 import AddDues from './components/AddDues';
+import AddMarks from './components/AddMarks';
 class App extends React.Component{
 	constructor(props){
 		super(props);
@@ -133,6 +134,8 @@ class App extends React.Component{
 					}
 				}}/>
 				<Route path="/edit/due/:id" render={(props)=><AddDues op='edit'{...props}/>}/>
+				<Route path="/marks/:id" render={(props)=><AddMarks op='edit'{...props}/>}/>
+
 
 						
 					</Switch>
