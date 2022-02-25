@@ -157,6 +157,7 @@ else
 }
 })
 })
+
 app.get('/list/subject/:id',(req,res)=>
 {
    const sql=`select * from subject_details where subcode=${req.params.id}`
@@ -336,10 +337,10 @@ app.post('/update/dues/:id', (req,res)=>
 })
 })
 
-app.post('/add/marks',(req,res)=>
+app.post('/add/marks/:id',(req,res)=>
 {
    //let id=shortid.generate();
-   const sql=`insert into marks()`
+   const sql=`insert into marks(rollno,subcode,marks)values('${req.body.rollno}','${req.body.subcode}','${req.body.marks}')`
    con.query(sql,(err,result)=>
    {
       if(err){
@@ -357,7 +358,6 @@ app.post('/add/marks',(req,res)=>
       }
    })
 })
-app.get
 
 
 app.listen(port, function () {   

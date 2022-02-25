@@ -70,7 +70,7 @@ class AddSubject extends React.Component {
 }
 
     render() {
-        return (<Container className="bg-info"><Form onSubmit={this.handleSubmit}>
+        return (<Container className="bg-secondary"><Form onSubmit={this.handleSubmit}>
         <Row className="mb-3">
           
           <Form.Group as={Col} controlId="code">

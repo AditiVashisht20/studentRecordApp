@@ -152,28 +152,33 @@ convertDate(inputFormat)
     var d=new Date(inputFormat)
     return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('-')
 }
-    
-    handleSubmit(event){
-        event.preventDefault()
-        const data = {
-            fname:this.state.fname,
-            midname:this.state.midname || null,
-            lname:this.state.lname,
-            dob:this.state.dob,
-            age:this.state.age+'',
-            email:this.state.email,
-            address:this.state.address,
-            subjects:JSON.stringify(this.state.selectedOption),
-        }
-        axios.post(`${config.API_URL}/add/student`, data, {
-            'Content-Type': 'application\json',
-            'Access-Control-Allow-Origin': '*'
-        }).then(response => {
-            console.log(response);
-            alert(response.data)
-            window.location.reload()
-        })
+handleSubmit(event){
+    let url = `${config.API_URL}/add/student`
+    if(this.props.op === 'edit')
+        url = `${config.API_URL}/edit/student/${this.props.match.params.id}`
+    console.log(url);
+    event.preventDefault()
+    const data = {
+        fname:this.state.fname,
+        midname: this.state.midname || '',
+        lname:this.state.lname,
+        dob:this.state.dob,
+        age:this.state.age+'',
+        email:this.state.email,
+        address:this.state.address,
+        subjects:JSON.stringify(this.state.selectedOption),
     }
+    axios.post(url, data, {
+        'Content-Type': 'application\json',
+        'Access-Control-Allow-Origin': '*'
+    }).then(response => {
+        console.log(response);
+        alert(response.data)
+        window.location = '/'
+    })
+}
+    
+    
     handleChange(selectedOption)
     {
         console.log(selectedOption)
@@ -185,7 +190,7 @@ convertDate(inputFormat)
         const selectedOption=this.state;
 
         
-        return (<Container className="bg-info"><Form onSubmit={this.handleSubmit}>
+        return (<Container  className="bg-info"><Form onSubmit={this.handleSubmit}>
   <Row className="mb-3">
     
     <Form.Group as={Col} controlId="name">
