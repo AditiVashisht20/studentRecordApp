@@ -340,12 +340,15 @@ app.post('/update/dues/:id', (req,res)=>
 app.post('/add/marks/:id',(req,res)=>
 {
    //let id=shortid.generate();
+   console.log(req.body);
    const sql=`insert into marks(rollno,subcode,marks)values('${req.body.rollno}','${req.body.subcode}','${req.body.marks}')`
    con.query(sql,(err,result)=>
    {
       if(err){
+         console.log(err);
       if(err.no==1062)
       {
+         
          res.send('Duplicate Marks exists for this students');
       }
       else{

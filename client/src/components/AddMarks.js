@@ -4,6 +4,7 @@ import {
 } from 'react-bootstrap'
 import axios from "axios";
 import config from '../config.json'
+import Select from 'react-select';
 
 class AddMarks extends React.Component {
     constructor(props) {
@@ -11,10 +12,20 @@ class AddMarks extends React.Component {
         this.state = {
             id: this.props.match.params.id,
             rollNumber: this.props.match.params.id,  
-            subcode:this.props.match.params.id,     
+            subcode:this.props.match.params.id,  
+            marks:this.props.match.params.id,   
         }       
         this.getData = this.getData.bind(this);
        this.getData(this.props.match.params.id);
+       this.setMarks=this.setMarks.bind(this);
+       this.handleSubmit=this.handleSubmit.bind(this);
+    
+    }
+    setMarks(marks)
+    {
+        this.setState({
+            marks:marks,
+        })
     }
     async getData(id){
         await axios.get(`${config.API_URL}/list/student/${id}`).then(response => {
@@ -27,18 +38,28 @@ class AddMarks extends React.Component {
         
     }
     handleSubmit(event){
+        event.preventDefault();
         const data = {
             subcode:this.state.subcode,
-            rollNumber:this.state.rollNumber,         
+            rollNumber:this.state.rollNumber,  
+            marks:this.state.marks, 
         }
          
-    axios.post(`${config.API_URL}/add/marks/id`, data, {
+    axios.post(`${config.API_URL}/add/marks/${this.state.rollNumber}`, data, {
         'Content-Type': 'application\json',
         'Access-Control-Allow-Origin': '*'
         }).then(response => {
             console.log(response);
             alert(response.data)
             window.location = '/'
+        })
+    }
+    
+    handleChange(selectedOption)
+    {
+        console.log(selectedOption)
+        this.setState({
+            selectedOption: selectedOption
         })
     }
 
@@ -81,7 +102,8 @@ class AddMarks extends React.Component {
                     </Form.Control>         
                           <Form.Group as={Col} controlId="marks">
                             <Form.Label> Marks</Form.Label>
-                            <Form.Control required type="marks" placeholder="Enter marks" />
+                        <Form.Control required type="marks" placeholder="Enter marks" onChange={(e) => this.setMarks(e.target.value)}
+      value={this.state.marks}/>
                         </Form.Group>
                         </Row>
                     
