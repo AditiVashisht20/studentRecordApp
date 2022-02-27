@@ -12,13 +12,14 @@ class AddMarks extends React.Component {
         this.state = {
             id: this.props.match.params.id,
             rollNumber: this.props.match.params.id,  
-            subcode:this.props.match.params.id,  
-            marks:this.props.match.params.id,   
+            subcode:null,  
+            marks:0,   
         }       
         this.getData = this.getData.bind(this);
        this.getData(this.props.match.params.id);
        this.setMarks=this.setMarks.bind(this);
        this.handleSubmit=this.handleSubmit.bind(this);
+       this.handleChange=this.handleChange.bind(this);
     
     }
     setMarks(marks)
@@ -41,9 +42,10 @@ class AddMarks extends React.Component {
         event.preventDefault();
         const data = {
             subcode:this.state.subcode,
-            rollNumber:this.state.rollNumber,  
-            marks:this.state.marks, 
+            rollNumber:parseInt(this.state.rollNumber),  
+            marks:parseInt(this.state.marks), 
         }
+        console.log(data);
          
     axios.post(`${config.API_URL}/add/marks/${this.state.rollNumber}`, data, {
         'Content-Type': 'application\json',
@@ -51,15 +53,15 @@ class AddMarks extends React.Component {
         }).then(response => {
             console.log(response);
             alert(response.data)
-            window.location = '/'
+            //window.location = '/'
         })
     }
     
-    handleChange(selectedOption)
+    handleChange(e)
     {
-        console.log(selectedOption)
+      //  console.log(e.target.value)
         this.setState({
-            selectedOption: selectedOption
+            subcode:e.target.value,
         })
     }
 
@@ -85,11 +87,11 @@ class AddMarks extends React.Component {
                         </Form.Group>
                     </Row>
                     <Row>
-                      <Form.Control as="select">
+                      <Form.Control as="select" onChange={this.handleChange}>
                           <option disabled readOnly selected>Select the subject </option> 
                             {   
                                 this.state.subjects.map(ele=>{
-                                    console.log(ele);
+                                   // console.log(ele);
                                     
                                     return (<option key={ele.value} value={ele.value}>{ele.label}</option>)
                                 })
