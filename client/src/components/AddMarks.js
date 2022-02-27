@@ -5,6 +5,8 @@ import {
 import axios from "axios";
 import config from '../config.json'
 import Select from 'react-select';
+import { Table } from "react-bootstrap";
+
 
 class AddMarks extends React.Component {
     constructor(props) {
@@ -111,9 +113,40 @@ class AddMarks extends React.Component {
                     
                     <Button variant="warning" type="submit">
                          Add Marks
-                    </Button>
+                    </Button>                  
                 </Form>
+                <br></br>
+                <br></br>
+                
+         
+
+         <Table striped bordered hover variant="dark" size="sm">
+            <thead>
+            <tr>
+              <th>RollNo</th>
+              <th>Name</th>
+              <th>Subject</th>
+              <th>Marks</th>
+            </tr></thead>
+
+            <tbody>
+              
+                <tr>
+                <td>1</td>
+                <td>bye</td>
+                <td>tata</td>
+                <td>biee</td>
+                </tr>
+
+            </tbody>
+            </Table>
             </Container>
+
+                  
+         
+             
+
+            
         )
 
 
@@ -122,7 +155,9 @@ class AddMarks extends React.Component {
                {
                       return <h1>Loading</h1>
                }
-    }
+
+               }
 }
+
 
 export default AddMarks;
