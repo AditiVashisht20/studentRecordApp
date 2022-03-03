@@ -60,7 +60,7 @@ export default class Login extends React.Component{
                     alert(response.data.data);
                 }
             }else{
-                alert("Something went wrong! \nPlease try again some time.")
+                alert("Something went wrong! \n Please try again some time.")
             }
         })
 

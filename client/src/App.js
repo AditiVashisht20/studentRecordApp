@@ -16,6 +16,8 @@ import config from './config.json'
 import EditDues from './components/Admin/EditDues';
 import AddDues from './components/Admin/AddDues';
 import AddMarks from './components/Admin/AddMarks';
+import ViewMarks from './components/user/ViewMarks';
+import SubjectsList from './components/user/SubjectList';
 class App extends React.Component{
 	constructor(props){
 		super(props);
@@ -142,6 +144,8 @@ class App extends React.Component{
 				}}/>
 				<Route path="/edit/due/:id" render={(props)=><AddDues op='edit'{...props}/>}/>
 				<Route path="/marks/:id" render={(props)=><AddMarks op='edit'{...props}/>}/>
+				<Route path="/view/marks" render={(props)=><ViewMarks email={this.state.email}{...props}/>}/>
+				<Route path="/view/subjects" render={(props)=><SubjectsList email={this.state.email}{...props}/>}/>
 
 
 						
