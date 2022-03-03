@@ -4,7 +4,7 @@ import {
     } from 'react-bootstrap'
     
 import axios from 'axios'
-import config from '../config.json'
+import config from '../../config.json'
 class AddSubject extends React.Component {
 
     constructor(props) {

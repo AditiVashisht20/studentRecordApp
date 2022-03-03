@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom'
 import { Container, ListGroup,OverlayTrigger,Table,Tooltip } from 'react-bootstrap'
-import config from '../config.json'
+import config from '../../config.json'
 
 
 class List extends React.Component {

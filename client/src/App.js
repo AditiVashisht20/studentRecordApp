@@ -8,14 +8,14 @@ import {
 import React from 'react';
 import Login from './components/Login'
 import Header from './components/Header'
-import AddStudent from './components/AddStudent'
-import AddSubject from './components/AddSubject';
+import AddStudent from './components/Admin/AddStudent'
+import AddSubject from './components/Admin/AddSubject';
 import HomePage from './components/HomePage';
 import axios from 'axios';
 import config from './config.json'
-import EditDues from './components/EditDues';
-import AddDues from './components/AddDues';
-import AddMarks from './components/AddMarks';
+import EditDues from './components/Admin/EditDues';
+import AddDues from './components/Admin/AddDues';
+import AddMarks from './components/Admin/AddMarks';
 class App extends React.Component{
 	constructor(props){
 		super(props);
@@ -28,16 +28,23 @@ class App extends React.Component{
 	}
 
 
-	setLoggedIn(isLoggedIn){
+
+	setLoggedIn(isLoggedIn,role,username){
 		sessionStorage.setItem('isLoggedIn', isLoggedIn)
+		sessionStorage.setItem('role',role);
+		sessionStorage.setItem('username',username);
 		this.setState({
-			isLoggedIn: JSON.parse(sessionStorage.getItem('isLoggedIn'))
+			isLoggedIn: JSON.parse(sessionStorage.getItem('isLoggedIn')),
+			role:sessionStorage.getItem('role'),
+			email:username
 		});
 	}
 
   	componentDidMount(){
 		this.setState({
-			isLoggedIn:JSON.parse(sessionStorage.getItem('isLoggedIn'))
+			isLoggedIn:JSON.parse(sessionStorage.getItem('isLoggedIn')),
+			role:sessionStorage.getItem('role'),
+			email:sessionStorage.getItem('username')
 		});
 	}
 
@@ -50,9 +57,9 @@ class App extends React.Component{
     	}else{
       		return (
 		  		<Router>
-			  		<Header />
+			  		<Header handleLogout = {this.setLoggedIn} role={this.state.role} />
 			  		<Switch>
-						<Route exact path="/" component={HomePage}/>
+						<Route exact path="/" render={(props)=> <HomePage role={this.state.role}email={this.state.email}{...props}/>}/>
 						<Route path="/add/student" component={AddStudent} />
 						<Route path="/add/subject" component={AddSubject}/>
 						<Route path="/edit/student/:id" render={(props)=> <AddStudent op='edit'{...props}/>}/>

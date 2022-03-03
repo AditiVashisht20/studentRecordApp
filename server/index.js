@@ -31,7 +31,7 @@ var con = mysql.createConnection({
 const username= req.body.username;
     const password=req.body.password;
 
-    const sqlquery=`SELECT password FROM login where username='${username}'`;
+    const sqlquery=`SELECT password, role FROM login where username='${username}'`;
    
     con.query(sqlquery, function (err, result) {
        if (err) 
@@ -42,6 +42,7 @@ const username= req.body.username;
               if(result[0].password==password)
               {
                   res.send({
+                     role:result[0].role,
                      statusCode:200
                   })
               }
@@ -120,7 +121,20 @@ app.post('/add/student',(req,res)=>
       }
       else
       {
-         res.send('Sucessfully Added');
+         const q=`insert into login(username,password,role) values('${req.body.email}','${req.body.lname}','user')`;
+         con.query(q,(err,result)=>
+         {
+            if(err)
+            {
+               console.log(err);
+               res.send("Login: Invalid");
+            }
+            else
+            {
+               res.send("Added succesfully");
+            }
+         })
+        // res.send('Sucessfully Added');
 
       }
 
@@ -362,6 +376,37 @@ app.post('/add/marks/:id',(req,res)=>
    })
 })
 
+app.get('/list/marks/:id',(req,res)=>
+{
+   const sql=`select *from marks where rollno=${req.params.id}`;
+   con.query(sql,(err,result)=>
+{
+   if(err)
+   {
+      res.send("Try AGain");
+   }
+   else
+   {
+      res.send(result);
+   }
+})
+})
+
+
+app.get('/view/student/:email', (req,res)=>
+{
+   const sql=`select * from student_data where email='${req.params.email}'`;
+   con.query(sql,(err,result)=>
+   {
+      if(err)
+      {
+         res.send("Try Again");
+      }
+      else{
+         res.send(result[0]);
+      }
+   })
+})
 
 app.listen(port, function () {   
     console.log(`Student app listening at ${port}`);

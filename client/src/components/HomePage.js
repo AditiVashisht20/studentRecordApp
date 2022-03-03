@@ -1,7 +1,8 @@
 import React from 'react';
 import axios from 'axios';
-import List from './List';
+import List from './Admin/List';
 import config from '../config.json'
+import Profile from './user/Profile';
 import { Tabs, Tab, Row, Col, Container, Jumbotron, Card } from 'react-bootstrap'
 
 
@@ -26,6 +27,8 @@ class HomePage extends React.Component {
     }
 
     render() {
+        if(this.props.role=='admin')
+        {
         if (this.state.data != null) {
             return (
                 <Container fluid>
@@ -34,13 +37,12 @@ class HomePage extends React.Component {
                     </Row>
                     <Jumbotron className='p-10 px-5'>
                         <Row>
-
-                            <Col xs='7' sm='7' md='7' lg='6'>
+                             <Col xs='7' sm='7' md='7' lg='6'>
                                 <Card style={{ width: '18rem' }}>
                                     <Card.Body>
                                         <Card.Title>Total Students</Card.Title>
                                         <Card.Text>
-                                            {this.state.data}
+                                            {this.state.data.students}
                                         </Card.Text>
                                     </Card.Body>
                                 </Card>
@@ -50,7 +52,7 @@ class HomePage extends React.Component {
                                     <Card.Body>
                                         <Card.Title>Total Subjects</Card.Title>
                                         <Card.Text>
-                                            {this.state.data}
+                                            {this.state.data.subjects}
                                         </Card.Text>
                                     </Card.Body>
                                 </Card>
@@ -66,12 +68,18 @@ class HomePage extends React.Component {
                             <List option='subjects' />
                         </Tab>
                     </Tabs>
+                   
 
                 </Container>
             )
         } else {
             return <h1>Loading</h1>
         }
+    }
+    else{
+        //return <h1>user profile</h1>
+       return(<Profile email={this.props.email}/>)
+    }
     }
 }
 

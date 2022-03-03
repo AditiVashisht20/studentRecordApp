@@ -3,7 +3,7 @@ import {
     Form, Row, Col, Button, Container
 } from 'react-bootstrap'
 import axios from "axios";
-import config from '../config.json'
+import config from '../../config.json'
 import Select from 'react-select';
 import { Table } from "react-bootstrap";
 
@@ -22,6 +22,8 @@ class AddMarks extends React.Component {
        this.setMarks=this.setMarks.bind(this);
        this.handleSubmit=this.handleSubmit.bind(this);
        this.handleChange=this.handleChange.bind(this);
+       this.getMarks=this.getMarks.bind(this);
+       this.getMarks(this.props.match.params.id);
     
     }
     setMarks(marks)
@@ -32,13 +34,26 @@ class AddMarks extends React.Component {
     }
     async getData(id){
         await axios.get(`${config.API_URL}/list/student/${id}`).then(response => {
-            console.log(response.data.subjects);
+           // console.log(response.data.subjects);
             this.setState({
                 student_data : response.data || '',
                 subjects: response.data.subjects                
             })            
         })
         
+    }
+
+    async getMarks(id)
+    {
+        await axios.get(`${config.API_URL}/list/marks/${id}`).then(response=>
+            {
+               // console.log(response.data);
+                this.setState({
+                    addedMarks:response.data,
+
+                })
+
+            })
     }
     handleSubmit(event){
         event.preventDefault();
@@ -124,33 +139,29 @@ class AddMarks extends React.Component {
             <thead>
             <tr>
               <th>RollNo</th>
-              <th>Name</th>
               <th>Subject</th>
               <th>Marks</th>
             </tr></thead>
 
             <tbody>
-              
-                <tr>
-                <td>1</td>
-                <td>bye</td>
-                <td>tata</td>
-                <td>biee</td>
+                {
+
+                this.state.addedMarks && this.state.addedMarks.length>0?(this.state.addedMarks.map((ele,index)=>
+                {
+                    return(
+                        <tr>
+                <td>{index+1}</td>
+                <td>{ele.subcode}</td>
+                <td>{ele.marks}</td>              
                 </tr>
+                   )})):<p>No data to show</p>
+                }
 
             </tbody>
             </Table>
-            </Container>
-
-                  
-         
-             
-
-            
-        )
-
-
-          }
+            </Container>  
+                              
+        )}
                else
                {
                       return <h1>Loading</h1>

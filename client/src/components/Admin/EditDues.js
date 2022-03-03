@@ -3,7 +3,7 @@ import React from "react";
 import {
     Row,Col,Button,Container, ListGroup,OverlayTrigger,Tooltip
 } from 'react-bootstrap'
-import config from '../config.json'
+import config from '../../config.json'
 
 
 import { Link } from "react-router-dom";
